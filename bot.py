@@ -116,6 +116,17 @@ async def report(message: Message):
     await message.answer(
     "⚠️ Для отправки жалобы напиши сюда:\n\@buddhism_cooperation_bot"
 )
+@dp.message(lambda message: message.text == "🔎 Смотреть анкеты")
+async def button_search(message: Message):
+    await search(message)
+
+@dp.message(lambda message: message.text == "👤 Моя анкета")
+async def button_profile(message: Message):
+    await profile(message)
+
+@dp.message(lambda message: message.text == "🗑 Удалить анкету")
+async def button_delete(message: Message):
+    await delete_profile(message)
 @dp.message()
 async def save_anketa(message: Message):
     if message.text.startswith("/"):
