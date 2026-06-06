@@ -65,18 +65,6 @@ async def search(message: Message):
         await message.answer("😢 Пока нет других анкет")
         return
 
-@dp.message()
-async def save_anketa(message: Message):
-    if message.text.startswith("/"):
-        return
-
-    users[str(message.from_user.id)] = message.text
-    save_data(data)
-
-    await message.answer("✅ Анкета сохранена! Напиши /search")
-
-
-
     user_id, anketa = choice(candidates)
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
@@ -89,6 +77,15 @@ async def save_anketa(message: Message):
     await message.answer(anketa, reply_markup=keyboard)
 
 
+@dp.message()
+async def save_anketa(message: Message):
+    if message.text.startswith("/"):
+        return
+
+    users[str(message.from_user.id)] = message.text
+    save_data(data)
+
+    await message.answer("✅ Анкета сохранена! Напиши /search")
 @dp.callback_query()
 async def handle(callback: CallbackQuery):
     uid = str(callback.from_user.id)
