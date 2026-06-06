@@ -87,11 +87,12 @@ async def search(message: Message):
 async def profile(message: Message):
     uid = str(message.from_user.id)
 
-
+    if uid not in users:
         await message.answer("⚠️ У тебя пока нет анкеты")
         return
 
     await message.answer("👤 Твоя анкета:\n\n" + users[uid])
+
 
 
 @dp.message(Command("delete"))
