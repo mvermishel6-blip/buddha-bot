@@ -49,9 +49,11 @@ async def start(message: Message):
    
 
     await message.answer(
-    "🪷 Выберите действие внизу 🎐⬇️\n"
-    "🪷 P.S. Пример анкеты: https://t.me/buddhism_cooperation/25?comment=14,\n"
-    reply_markup=menu
+        await message.answer(
+        "Выберите действие внизу👇\n\n"
+        "🪷 P.S. Пример анкеты: https://t.me/buddhism_cooperation/25?comment=14",
+        reply_markup=menu
+    )
 )
     
 @dp.message(Command("search"))
