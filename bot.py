@@ -123,9 +123,17 @@ async def save_anketa(message: Message):
 async def handle(callback: CallbackQuery):
     uid = str(callback.from_user.id)
 
-    if callback.data.startswith("like_"):
+    if callback.data.startswith("copy_"):
         target_id = callback.data.split("_")[1]
 
+        if target_id in users:
+            await callback.message.answer(users[target_id])
+
+        await callback.answer("📋 Анкета отправлена")
+        return
+
+    if callback.data.startswith("like_"):
+        target_id = callback.data.split("_")[1]
         likes.setdefault(uid, [])
 
         if target_id not in likes[uid]:
