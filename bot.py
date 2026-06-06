@@ -5,8 +5,8 @@ from random import choice
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
+
 
 
 TOKEN = "8802174236:AAHCC-ddw5qZAafv7pPGRd3YIh-8w9HWms0"
