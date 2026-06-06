@@ -114,7 +114,7 @@ async def delete_profile(message: Message):
 @dp.message(lambda message: message.text == "⚠️ Жалоба")
 async def report(message: Message):
     await message.answer(
-    "⚠️ Для отправки жалобы напиши сюда:\n\nhttps://t.me/https://t.me/buddhism_cooperation_bot"
+    "⚠️ Для отправки жалобы напиши сюда:\n\@buddhism_cooperation_bot"
 )
 @dp.message()
 async def save_anketa(message: Message):
