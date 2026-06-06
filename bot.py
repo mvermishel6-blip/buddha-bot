@@ -76,7 +76,33 @@ async def search(message: Message):
 
     await message.answer(anketa, reply_markup=keyboard)
 
+@dp.message(Command("profile"))
+async def profile(message: Message):
+    uid = str(message.from_user.id)
 
+    if uid not in users:
+        await message.answer("⚠️ У тебя пока нет анкеты")
+        return
+
+    await message.answer("👤 Твоя анкета:\n\n" + users[uid])
+
+
+@dp.message(Command("delete"))
+async def delete_profile(message: Message):
+    uid = str(message.from_user.id)
+
+    if uid not in users:
+        await message.answer("⚠️ У тебя и так нет анкеты")
+        return
+
+    del users[uid]
+
+    if uid in likes:
+        del likes[uid]
+
+    save_data(data)
+
+    await message.answer("🗑 Анкета удалена")
 @dp.message()
 async def save_anketa(message: Message):
     if message.text.startswith("/"):
