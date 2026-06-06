@@ -92,8 +92,7 @@ async def search(message: Message):
     ]
 )
 
-await message.answer(anketa, reply_markup=keyboard)
-
+    await message.answer(anketa, reply_markup=keyboard)
 @dp.message(Command("profile"))
 async def profile(message: Message):
     uid = str(message.from_user.id)
