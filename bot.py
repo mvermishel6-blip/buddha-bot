@@ -37,6 +37,12 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start(message: Message):
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🔎 Смотреть анкеты", callback_data="menu_search")],
+        [InlineKeyboardButton(text="👤 Моя анкета", callback_data="menu_profile")],
+        [InlineKeyboardButton(text="🗑 Удалить анкету", callback_data="menu_delete")]
+    ])
+
     await message.answer(
         "🪷 Привет!\n\n"
         "Отправь анкету одним сообщением:\n\n"
@@ -45,7 +51,8 @@ async def start(message: Message):
         "Страна:\n"
         "Интересы:\n"
         "Что ищу в общении:\n\n"
-        "Потом напиши /search"
+        "Или выбери действие кнопкой:",
+        reply_markup=keyboard
     )
 @dp.message(Command("search"))
 async def search(message: Message):
