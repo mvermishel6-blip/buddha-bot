@@ -33,27 +33,33 @@ likes = data["likes"]
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
+menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="🔎 Смотреть анкеты")],
+        [KeyboardButton(text="👤 Моя анкета")],
+        [KeyboardButton(text="🗑 Удалить анкету")],
+        [KeyboardButton(text="⚠️ Жалоба")]
+    ],
+    resize_keyboard=True
+)
 
 
 @dp.message(Command("start"))
 async def start(message: Message):
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔎 Смотреть анкеты", callback_data="menu_search")],
-        [InlineKeyboardButton(text="👤 Моя анкета", callback_data="menu_profile")],
-        [InlineKeyboardButton(text="🗑 Удалить анкету", callback_data="menu_delete")]
-    ])
+   
 
     await message.answer(
-        "🪷 Привет!\n\n"
-        "Отправь анкету одним сообщением:\n\n"
-        "Имя:\n"
-        "Возраст:\n"
-        "Страна:\n"
-        "Интересы:\n"
-        "Что ищу в общении:\n\n"
-        "Или выбери действие кнопкой:",
-        reply_markup=keyboard
-    )
+    "🪷 Привет!\n\n"
+    "скопируй и Отправь анкету одним сообщением\n"
+    "Имя:\n"
+    "Возраст:\n"
+    "Страна (по желанию):\n"
+    "Интересы:\n"
+    "Что ищу в общении:\n\n"
+    "Или выбери действие кнопками снизу",
+    reply_markup=menu
+)
+    
 @dp.message(Command("search"))
 async def search(message: Message):
     uid = str(message.from_user.id)
@@ -74,20 +80,14 @@ async def search(message: Message):
 
     user_id, anketa = choice(candidates)
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text="❤️ Лайк", callback_data=f"like_{user_id}"),
-            InlineKeyboardButton(text="❌ Пропуск", callback_data="skip")
-        ]
-    ])
-
-    await message.answer(anketa, reply_markup=keyboard)
+    
+    await message.answer(anketa)
 
 @dp.message(Command("profile"))
 async def profile(message: Message):
     uid = str(message.from_user.id)
 
-    if uid not in users:
+
         await message.answer("⚠️ У тебя пока нет анкеты")
         return
 
@@ -110,6 +110,11 @@ async def delete_profile(message: Message):
     save_data(data)
 
     await message.answer("🗑 Анкета удалена")
+@dp.message(lambda message: message.text == "⚠️ Жалоба")
+async def report(message: Message):
+    await message.answer(
+    "⚠️ Для отправки жалобы напиши сюда:\n\nhttps://t.me/https://t.me/buddhism_cooperation_bot"
+)
 @dp.message()
 async def save_anketa(message: Message):
     if message.text.startswith("/"):
