@@ -112,6 +112,12 @@ if target_id in likes and uid in likes[target_id]:
 
     await bot.send_message(uid, f"💖 Взаимный лайк!\nКонтакт: {target_contact}")
     await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
+
+    user_contact = f"@{user.username}" if user.username else f"id: {uid}"
+    target_contact = f"@{target.username}" if target.username else f"id: {target_id}"
+
+    await bot.send_message(uid, f"💖 Взаимный лайк!\nКонтакт: {target_contact}")
+    await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
     elif callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
 
