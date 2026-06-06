@@ -114,7 +114,7 @@ if target_id in likes and uid in likes[target_id]:
     await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
 
     
-    elif callback.data == "skip":
+    if callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
 
     await callback.answer()
