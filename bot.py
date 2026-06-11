@@ -51,6 +51,12 @@ menu = ReplyKeyboardMarkup(
 
 @dp.message(Command("start"))
 async def start(message: Message):
+    uid = str(message.from_user.id)
+
+    if uid not in users:
+        users[uid] = "start"
+        save_data(data)
+
    
 
     await message.answer(
