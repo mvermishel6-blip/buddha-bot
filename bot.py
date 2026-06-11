@@ -228,26 +228,27 @@ async def handle(callback: CallbackQuery):
     if callback.data.startswith("report_"):
         reported_id = callback.data.split("_")[1]
 
-admin_keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text="🗑 Удалить",
-                callback_data=f"delete_{reported_id}"
-            ),
-            InlineKeyboardButton(
-                text="🚫 Заблокировать",
-                callback_data=f"ban_{reported_id}"
-            )
-        ]
-    ]
-)
+        admin_keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="🗑 Удалить",
+                        callback_data=f"delete_{reported_id}"
+                    ),
+                    InlineKeyboardButton(
+                        text="🚫 Заблокировать",
+                        callback_data=f"ban_{reported_id}"
+                    )
+                ]
+            ]
+        )
 
-await bot.send_message(
-    ADMIN_GROUP_ID,
-    f"🚨 Жалоба на анкету\n\nID: {reported_id}",
-    reply_markup=admin_keyboard
-)
+        await bot.send_message(
+            ADMIN_GROUP_ID,
+            f"🚨 Жалоба на анкету\n\nID: {reported_id}\n\n{users.get(reported_id, 'Анкета не найдена')}",
+            reply_markup=admin_keyboard
+        )
+
         await callback.message.answer("✅ Жалоба отправлена администрации")
         await callback.answer()
         return
@@ -256,8 +257,7 @@ if callback.data.startswith("delete_"):
 
     if target_id in users:
         del users[target_id]
-        if target_id not in banned:
-    banned.append(target_id)
+
 
     save_data(data)
 
