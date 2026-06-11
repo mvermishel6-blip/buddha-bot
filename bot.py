@@ -305,7 +305,7 @@ async def broadcast(message: Message):
 
     await message.answer(f"✅ Отправлено: {sent}")
 async def main():
-    await bot.delete_webhook(drop_pending_updates=True)
+    await bot.delete_webhook(drop_pending_updates=False)
     await dp.start_polling(bot)
 
 
