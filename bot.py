@@ -150,19 +150,20 @@ async def button_delete(message: Message):
     await delete_profile(message)
 @dp.message()
 async def save_anketa(message: Message):
-        if message.chat.id == ADMIN_GROUP_ID:
+    if message.chat.id == ADMIN_GROUP_ID:
         return
-        if str(message.from_user.id) in banned:
-        await message.answer("🚫 Вы заблокированы")
+
+    if str(message.from_user.id) in banned:
+        await message.answer("⛔ Вы заблокированы")
         return
+
     if message.text.startswith("/"):
         return
 
     users[str(message.from_user.id)] = message.text
     save_data(data)
 
-    await message.answer("✅ Анкета сохранена! Напиши /search")
-
+    await message.answer("✅ Анкета сохранена")
 @dp.callback_query()
 async def handle(callback: CallbackQuery):
     uid = str(callback.from_user.id)
