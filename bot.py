@@ -175,7 +175,7 @@ async def handle(callback: CallbackQuery):
                 target_id,
                 f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}"
             )
-                    return
+
         # взаимный лайк
         
         if target_id in likes and uid in likes[target_id]:
