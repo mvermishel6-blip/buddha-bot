@@ -79,19 +79,24 @@ async def search(message: Message):
 
     
     keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text="❤️ Лайк",
-                callback_data=f"like_{user_id}"
-            ),
-            InlineKeyboardButton(
-                text="❌ Пропустить",
-                callback_data="skip"
-            )
-        ]
+inline_keyboard=[
+    [
+        InlineKeyboardButton(
+            text="❤️ Лайк",
+            callback_data=f"like_{user_id}"
+        ),
+        InlineKeyboardButton(
+            text="❌ Пропустить",
+            callback_data="skip"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="🚨 Жалоба",
+            callback_data=f"report_{user_id}"
+        )
     ]
-)
+]
 
     await message.answer(anketa, reply_markup=keyboard)
 @dp.message(Command("profile"))
@@ -208,6 +213,17 @@ async def handle(callback: CallbackQuery):
 
                 await bot.send_message(uid, f"💖 Взаимный лайк!\nКонтакт: {target_contact}")
                 await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
+    if callback.data.startswith("report_"):
+        reported_id = callback.data.split("_")[1]
+
+        await bot.send_message(
+            ADMIN_GROUP_ID,
+            f"🚨 Жалоба на анкету\n\nID: {reported_id}\n\n{users.get(reported_id, 'Анкета не найдена')}"
+        )
+
+        await callback.message.answer("✅ Жалоба отправлена администрации")
+        await callback.answer()
+        return
 
     if callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
