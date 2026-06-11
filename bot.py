@@ -277,12 +277,11 @@ async def handle(callback: CallbackQuery):
 
         await callback.message.answer("🚫 Пользователь заблокирован")
         await callback.answer()
+    if callback.data == "skip":
+        await callback.message.answer("➡️ Пропущено")
+        await callback.answer()
         return
 
-    if callback.data == "skip":
-await callback.message.answer("➡️ Пропущено")
-    await callback.answer()
-    return
 @dp.message(Command("broadcast"))
 async def broadcast(message: Message):
     if str(message.chat.id) != str(ADMIN_GROUP_ID):
