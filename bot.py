@@ -76,10 +76,9 @@ candidates = [
     for user_id, anketa in users.items()
 if user_id != uid and user_id not in seen[uid]
 ]
-
-    if not candidates:
-        await message.answer("😢 Пока нет других анкет")
-        return
+if not candidates:
+    await message.answer("🥺 Пока нет новых анкет. Загляни чуть позже.")
+    return
 
     user_id, anketa = choice(candidates)
     seen[uid].append(user_id)
