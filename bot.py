@@ -253,29 +253,32 @@ async def handle(callback: CallbackQuery):
         await callback.answer()
         return
     if callback.data.startswith("delete_"):
-    target_id = callback.data.split("_")[1]
+        target_id = callback.data.split("_")[1]
 
-    if target_id in users:
-        del users[target_id]
+        if target_id in users:
+            del users[target_id]
 
+        save_data(data)
 
-    save_data(data)
-
-    await callback.message.answer("🗑 Анкета удалена")
-    await callback.answer()
-    return
+        await callback.message.answer("🗑 Анкета удалена")
+        await callback.answer()
+        return
 
     if callback.data.startswith("ban_"):
-    target_id = callback.data.split("_")[1]
+        target_id = callback.data.split("_")[1]
 
-    if target_id in users:
-        del users[target_id]
+        if target_id in users:
+            del users[target_id]
 
-    save_data(data)
+        if target_id not in banned:
+            banned.append(target_id)
 
-    await callback.message.answer("🚫 Пользователь заблокирован")
-    await callback.answer()
-    return
+        save_data(data)
+
+        await callback.message.answer("🚫 Пользователь заблокирован")
+        await callback.answer()
+        return
+
     if callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
 
