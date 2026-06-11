@@ -30,7 +30,11 @@ def save_data(data):
 data = load_data()
 users = data["users"]
 likes = data["likes"]
-
+data.setdefault("banned", [])
+banned = data["banned"]
+data.setdefault("seen", {})
+seen = data["seen"]
+banned = data.get("banned", [])
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -65,17 +69,21 @@ async def search(message: Message):
         await message.answer("⚠️ Сначала отправь анкету")
         return
 
-    candidates = [
-        (user_id, anketa)
-        for user_id, anketa in users.items()
-        if user_id != uid
-    ]
+seen.setdefault(uid, [])
+
+candidates = [
+    (user_id, anketa)
+    for user_id, anketa in users.items()
+if user_id != uid and user_id not in seen[uid]
+]
 
     if not candidates:
         await message.answer("😢 Пока нет других анкет")
         return
 
     user_id, anketa = choice(candidates)
+    seen[uid].append(user_id)
+    save_data(data)
 
     keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -112,6 +120,7 @@ async def profile(message: Message):
 async def delete_profile(message: Message):
     uid = str(message.from_user.id)
 
+
     if uid not in users:
         await message.answer("⚠️ У тебя и так нет анкеты")
         return
@@ -142,6 +151,11 @@ async def button_delete(message: Message):
     await delete_profile(message)
 @dp.message()
 async def save_anketa(message: Message):
+        if message.chat.id == ADMIN_GROUP_ID:
+        return
+        if str(message.from_user.id) in banned:
+        await message.answer("🚫 Вы заблокированы")
+        return
     if message.text.startswith("/"):
         return
 
@@ -149,6 +163,7 @@ async def save_anketa(message: Message):
     save_data(data)
 
     await message.answer("✅ Анкета сохранена! Напиши /search")
+
 @dp.callback_query()
 async def handle(callback: CallbackQuery):
     uid = str(callback.from_user.id)
@@ -213,15 +228,54 @@ async def handle(callback: CallbackQuery):
     if callback.data.startswith("report_"):
         reported_id = callback.data.split("_")[1]
 
-        await bot.send_message(
-            ADMIN_GROUP_ID,
-            f"🚨 Жалоба на анкету\n\nID: {reported_id}\n\n{users.get(reported_id, 'Анкета не найдена')}"
-        )
+admin_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="🗑 Удалить",
+                callback_data=f"delete_{reported_id}"
+            ),
+            InlineKeyboardButton(
+                text="🚫 Заблокировать",
+                callback_data=f"ban_{reported_id}"
+            )
+        ]
+    ]
+)
 
+await bot.send_message(
+    ADMIN_GROUP_ID,
+    f"🚨 Жалоба на анкету\n\nID: {reported_id}",
+    reply_markup=admin_keyboard
+)
         await callback.message.answer("✅ Жалоба отправлена администрации")
         await callback.answer()
         return
+if callback.data.startswith("delete_"):
+    target_id = callback.data.split("_")[1]
 
+    if target_id in users:
+        del users[target_id]
+        if target_id not in banned:
+    banned.append(target_id)
+
+    save_data(data)
+
+    await callback.message.answer("🗑 Анкета удалена")
+    await callback.answer()
+    return
+
+if callback.data.startswith("ban_"):
+    target_id = callback.data.split("_")[1]
+
+    if target_id in users:
+        del users[target_id]
+
+    save_data(data)
+
+    await callback.message.answer("🚫 Пользователь заблокирован")
+    await callback.answer()
+    return
     if callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
 
