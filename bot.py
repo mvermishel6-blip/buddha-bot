@@ -252,7 +252,7 @@ async def handle(callback: CallbackQuery):
         await callback.message.answer("✅ Жалоба отправлена администрации")
         await callback.answer()
         return
-if callback.data.startswith("delete_"):
+    if callback.data.startswith("delete_"):
     target_id = callback.data.split("_")[1]
 
     if target_id in users:
@@ -265,7 +265,7 @@ if callback.data.startswith("delete_"):
     await callback.answer()
     return
 
-if callback.data.startswith("ban_"):
+    if callback.data.startswith("ban_"):
     target_id = callback.data.split("_")[1]
 
     if target_id in users:
