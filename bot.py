@@ -148,6 +148,27 @@ async def button_profile(message: Message):
 @dp.message(lambda message: message.text == "🗑 Удалить анкету")
 async def button_delete(message: Message):
     await delete_profile(message)
+@dp.message(Command("broadcast"))
+async def broadcast(message: Message):
+    if str(message.chat.id) != str(ADMIN_GROUP_ID):
+        return
+
+    text = message.text.replace("/broadcast", "").strip()
+
+    if not text:
+        await message.answer("Использование: /broadcast текст")
+        return
+
+    sent = 0
+
+    for uid in users.keys():
+        try:
+            await bot.send_message(uid, text)
+            sent += 1
+        except:
+            pass
+
+    await message.answer(f"✅ Отправлено: {sent}")
 @dp.message()
 async def save_anketa(message: Message):
     if message.chat.id == ADMIN_GROUP_ID:
@@ -282,27 +303,7 @@ async def handle(callback: CallbackQuery):
         await callback.answer()
         return
 
-@dp.message(Command("broadcast"))
-async def broadcast(message: Message):
-    if str(message.chat.id) != str(ADMIN_GROUP_ID):
-        return
 
-    text = message.text.replace("/broadcast", "").strip()
-
-    if not text:
-        await message.answer("Использование: /broadcast текст")
-        return
-
-    sent = 0
-
-    for uid in users.keys():
-        try:
-            await bot.send_message(uid, text)
-            sent += 1
-        except:
-            pass
-
-    await message.answer(f"✅ Отправлено: {sent}")
 async def main():
     await bot.delete_webhook(drop_pending_updates=False)
     await dp.start_polling(bot)
