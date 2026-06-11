@@ -169,11 +169,13 @@ async def handle(callback: CallbackQuery):
         save_data(data)
 
         await callback.message.answer("💌 Лайк отправлен!")
-                  if target_id in users:
+
+        if target_id in users:
             await bot.send_message(
                 target_id,
                 f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}"
             )
+                    return
         # взаимный лайк
         
         if target_id in likes and uid in likes[target_id]:
