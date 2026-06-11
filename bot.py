@@ -170,39 +170,32 @@ async def handle(callback: CallbackQuery):
 
         await callback.message.answer("💌 Лайк отправлен!")
 
-
-    if target_id in users:
-    like_keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="❤️ Лайк",
-                    callback_data=f"like_{uid}"
-                ),
-                InlineKeyboardButton(
-                    text="❌ Пропустить",
-                    callback_data="skip"
-                )
-            ]
-        ]
-    )
-
-    await bot.send_message(
-        target_id,
-        f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}",
-        reply_markup=like_keyboard
+        if target_id in users:
+            like_keyboard = InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [
+                        InlineKeyboardButton(text="❤️ Лайк", callback_data=f"like_{uid}"),
+                        InlineKeyboardButton(text="❌ Пропустить", callback_data="skip")
+                    ]
+                ]
             )
 
-        # взаимный лайк
-        if target_id in likes and uid in likes[target_id]:
-            user = await bot.get_chat(uid)
-            target = await bot.get_chat(target_id)
+            await bot.send_message(
+                target_id,
+                f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}",
+                reply_markup=like_keyboard
+            )
 
-            user_contact = f"@{user.username}"
-            target_contact = f"@{target.username}"
+            if target_id in likes and uid in likes[target_id]:
+                user = await bot.get_chat(uid)
+                target = await bot.get_chat(target_id)
 
-            await bot.send_message(uid, f"💖 Взаимный лайк!\nКонтакт: {target_contact}")
-            await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
+                user_contact = f"@{user.username}" if user.username else "без username"
+                target_contact = f"@{target.username}" if target.username else "без username"
+
+                await bot.send_message(uid, f"💖 Взаимный лайк!\nКонтакт: {target_contact}")
+                await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
+
     if callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
 
