@@ -193,17 +193,15 @@ if target_id in users:
     )
 
         # взаимный лайк
-        
         if target_id in likes and uid in likes[target_id]:
             user = await bot.get_chat(uid)
             target = await bot.get_chat(target_id)
 
-            user_contact = f"@{user.username}" if user.username else f"id: {uid}"
-            target_contact = f"@{target.username}" if target.username else f"id: {target_id}"
+            user_contact = f"@{user.username}"
+            target_contact = f"@{target.username}"
 
             await bot.send_message(uid, f"💖 Взаимный лайк!\nКонтакт: {target_contact}")
             await bot.send_message(target_id, f"💖 Взаимный лайк!\nКонтакт: {user_contact}")
-
     if callback.data == "skip":
         await callback.message.answer("➡️ Пропущено")
 
