@@ -170,11 +170,27 @@ async def handle(callback: CallbackQuery):
 
         await callback.message.answer("💌 Лайк отправлен!")
 
-        if target_id in users:
-            await bot.send_message(
-                target_id,
-                f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}"
-            )
+if target_id in users:
+    like_keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="❤️ Лайк",
+                    callback_data=f"like_{uid}"
+                ),
+                InlineKeyboardButton(
+                    text="❌ Пропустить",
+                    callback_data="skip"
+                )
+            ]
+        ]
+    )
+
+    await bot.send_message(
+        target_id,
+        f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}",
+        reply_markup=like_keyboard
+    )
 
         # взаимный лайк
         
