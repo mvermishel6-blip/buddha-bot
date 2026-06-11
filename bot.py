@@ -280,7 +280,7 @@ async def handle(callback: CallbackQuery):
         return
 
     if callback.data == "skip":
-    await callback.message.answer(...)
+await callback.message.answer("➡️ Пропущено")
     await callback.answer()
     return
 @dp.message(Command("broadcast"))
