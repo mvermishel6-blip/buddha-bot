@@ -13,6 +13,7 @@ TOKEN = "8802174236:AAHCC-ddw5qZAafv7pPGRd3YIh-8w9HWms0"
 
 FILE = "data.json"
 
+ADMIN_GROUP_ID = -1003998982278
 
 def load_data():
     if os.path.exists(FILE):
@@ -174,8 +175,20 @@ async def handle(callback: CallbackQuery):
             like_keyboard = InlineKeyboardMarkup(
                 inline_keyboard=[
                     [
-                        InlineKeyboardButton(text="❤️ Лайк", callback_data=f"like_{uid}"),
-                        InlineKeyboardButton(text="❌ Пропустить", callback_data="skip")
+                        InlineKeyboardButton(
+                            text="❤️ Лайк",
+                            callback_data=f"like_{uid}"
+                        ),
+                        InlineKeyboardButton(
+                            text="❌ Пропустить",
+                            callback_data="skip"
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="🚨 Жалоба",
+                            callback_data=f"report_{uid}"
+                        )
                     ]
                 ]
             )
