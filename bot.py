@@ -283,9 +283,10 @@ async def handle(callback: CallbackQuery):
         await callback.message.answer("➡️ Пропущено")
 
     await callback.answer()
+        return
 @dp.message(Command("broadcast"))
 async def broadcast(message: Message):
-    if message.chat.id != ADMIN_GROUP_ID:
+    if str(message.chat.id) != str(ADMIN_GROUP_ID):
         return
 
     text = message.text.replace("/broadcast", "").strip()
