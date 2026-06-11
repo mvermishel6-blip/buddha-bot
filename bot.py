@@ -159,7 +159,7 @@ async def handle(callback: CallbackQuery):
         await callback.answer("📋 Анкета отправлена")
         return
 
-    if callback.data.startswith("like_"):
+      if callback.data.startswith("like_"):
         target_id = callback.data.split("_")[1]
         likes.setdefault(uid, [])
 
@@ -169,13 +169,13 @@ async def handle(callback: CallbackQuery):
         save_data(data)
 
         await callback.message.answer("💌 Лайк отправлен!")
-        if target_id in users:
+                  if target_id in users:
             await bot.send_message(
                 target_id,
-                "💌 Кому-то понравилась твоя анкета!\n\n"
-                "Продолжай смотреть анкеты — возможно, это взаимно 👀"
+                f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}"
             )
         # взаимный лайк
+        
         if target_id in likes and uid in likes[target_id]:
             user = await bot.get_chat(uid)
             target = await bot.get_chat(target_id)
