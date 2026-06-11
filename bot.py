@@ -280,10 +280,9 @@ async def handle(callback: CallbackQuery):
         return
 
     if callback.data == "skip":
-        await callback.message.answer("➡️ Пропущено")
-
+    await callback.message.answer(...)
     await callback.answer()
-        return
+    return
 @dp.message(Command("broadcast"))
 async def broadcast(message: Message):
     if str(message.chat.id) != str(ADMIN_GROUP_ID):
