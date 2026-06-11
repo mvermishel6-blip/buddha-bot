@@ -69,21 +69,21 @@ async def search(message: Message):
         await message.answer("⚠️ Сначала отправь анкету")
         return
 
-seen.setdefault(uid, [])
+    seen.setdefault(uid, [])
 
-candidates = [
-    (user_id, anketa)
-    for user_id, anketa in users.items()
-if user_id != uid and user_id not in seen[uid]
-]
-if not candidates:
-    await message.answer("🥺 Пока нет новых анкет. Загляни чуть позже.")
-    return
+    candidates = [
+        (user_id, anketa)
+        for user_id, anketa in users.items()
+        if user_id != uid and user_id not in seen[uid]
+    ]
+
+    if not candidates:
+        await message.answer("🥺 Пока нет новых анкет.")
+        return
 
     user_id, anketa = choice(candidates)
     seen[uid].append(user_id)
     save_data(data)
-
     keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [
