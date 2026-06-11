@@ -159,7 +159,7 @@ async def handle(callback: CallbackQuery):
         await callback.answer("📋 Анкета отправлена")
         return
 
-      if callback.data.startswith("like_"):
+    if callback.data.startswith("like_"):
         target_id = callback.data.split("_")[1]
         likes.setdefault(uid, [])
 
