@@ -295,7 +295,7 @@ async def broadcast(message: Message):
 
     sent = 0
 
-    for uid in users:
+    for uid in users.keys():
         try:
             await bot.send_message(uid, text)
             sent += 1
