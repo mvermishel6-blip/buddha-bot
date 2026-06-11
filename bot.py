@@ -77,27 +77,24 @@ async def search(message: Message):
 
     user_id, anketa = choice(candidates)
 
-    
     keyboard = InlineKeyboardMarkup(
-inline_keyboard=[
-    [
-        InlineKeyboardButton(
-            text="❤️ Лайк",
-            callback_data=f"like_{user_id}"
-        ),
-        InlineKeyboardButton(
-            text="❌ Пропустить",
-            callback_data="skip"
-        )
-    ],
-    [
-        InlineKeyboardButton(
-            text="🚨 Жалоба",
-            callback_data=f"report_{user_id}"
-        )
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="❤️ Лайк",
+                callback_data=f"like_{user_id}"
+            ),
+            InlineKeyboardButton(
+                text="❌ Пропустить",
+                callback_data="skip"
+            ),
+            InlineKeyboardButton(
+                text="🚨 Жалоба",
+                callback_data=f"report_{user_id}"
+            )
+        ]
     ]
-]
-
+)
     await message.answer(anketa, reply_markup=keyboard)
 @dp.message(Command("profile"))
 async def profile(message: Message):
