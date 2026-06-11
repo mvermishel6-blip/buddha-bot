@@ -170,7 +170,8 @@ async def handle(callback: CallbackQuery):
 
         await callback.message.answer("💌 Лайк отправлен!")
 
-if target_id in users:
+
+    if target_id in users:
     like_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -190,7 +191,7 @@ if target_id in users:
         target_id,
         f"❤️ Кому-то понравилась твоя анкета!\n\n{users[uid]}",
         reply_markup=like_keyboard
-    )
+            )
 
         # взаимный лайк
         if target_id in likes and uid in likes[target_id]:
@@ -206,8 +207,6 @@ if target_id in users:
         await callback.message.answer("➡️ Пропущено")
 
     await callback.answer()
-
-
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
