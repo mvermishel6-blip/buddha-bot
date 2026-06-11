@@ -283,6 +283,27 @@ async def handle(callback: CallbackQuery):
         await callback.message.answer("➡️ Пропущено")
 
     await callback.answer()
+@dp.message(Command("broadcast"))
+async def broadcast(message: Message):
+    if message.chat.id != ADMIN_GROUP_ID:
+        return
+
+    text = message.text.replace("/broadcast", "").strip()
+
+    if not text:
+        await message.answer("Использование: /broadcast текст")
+        return
+
+    sent = 0
+
+    for uid in users:
+        try:
+            await bot.send_message(uid, text)
+            sent += 1
+        except:
+            pass
+
+    await message.answer(f"✅ Отправлено: {sent}")
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
