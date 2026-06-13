@@ -187,6 +187,19 @@ async def save_anketa(message: Message):
     if message.text.startswith("/"):
         return
 
+    required_fields = ["Имя:", "Возраст:", "Пол:", "Запрос:", "Примечание:"]
+
+    if not all(field in message.text for field in required_fields):
+        await message.answer(
+            "⚠️ Анкета должна быть строго по шаблону:\n\n"
+            "Имя:\n"
+            "Возраст:\n"
+            "Пол:\n"
+            "Запрос:\n"
+            "Примечание:"
+        )
+        return
+
     users[str(message.from_user.id)] = message.text
     save_data(data)
 
