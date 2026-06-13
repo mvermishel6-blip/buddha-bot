@@ -63,6 +63,62 @@ async def start(message: Message):
         "🪷 P.S. Пример анкеты: https://t.me/buddhism_cooperation/25?comment=14",
         reply_markup=menu,
     )
+@dp.message(lambda message: message.text == "📝 Заполнить анкету")
+async def start_form(message: Message):
+    uid = str(message.from_user.id)
+    drafts[uid] = {"step": "name"}
+    await message.answer("Напиши своё имя:")
+
+
+@dp.message(lambda message: str(message.from_user.id) in drafts)
+async def form_steps(message: Message):
+    uid = str(message.from_user.id)
+    text = message.text.strip()
+
+    if text.startswith("/"):
+        return
+
+    step = drafts[uid]["step"]
+
+    if step == "name":
+        drafts[uid]["name"] = text
+        drafts[uid]["step"] = "age"
+        await message.answer("Записано ✅\nНапиши возраст только цифрами:")
+
+    elif step == "age":
+        if not text.isdigit():
+            await message.answer("Возраст только цифрами, например: 17")
+            return
+        drafts[uid]["age"] = text
+        drafts[uid]["step"] = "gender"
+        await message.answer("Записано ✅\nНапиши пол:")
+
+    elif step == "gender":
+        drafts[uid]["gender"] = text
+        drafts[uid]["step"] = "request"
+        await message.answer("Записано ✅\nНапиши запрос:")
+
+    elif step == "request":
+        drafts[uid]["request"] = text
+        drafts[uid]["step"] = "note"
+        await message.answer("Записано ✅\nНапиши примечание:")
+
+    elif step == "note":
+        drafts[uid]["note"] = text
+
+        anketa = (
+            f"Имя: {drafts[uid]['name']}\n"
+            f"Возраст: {drafts[uid]['age']}\n"
+            f"Пол: {drafts[uid]['gender']}\n"
+            f"Запрос: {drafts[uid]['request']}\n"
+            f"Примечание: {drafts[uid]['note']}"
+        )
+
+        users[uid] = anketa
+        save_data(data)
+        del drafts[uid]
+
+        await message.answer("✅ Анкета сохранена")
 
     
 @dp.message(Command("search"))
@@ -173,62 +229,6 @@ async def broadcast(message: Message):
             pass
 
     await message.answer(f"✅ Отправлено: {sent}")
-@dp.message(lambda message: message.text == "📝 Заполнить анкету")
-async def start_form(message: Message):
-    uid = str(message.from_user.id)
-    drafts[uid] = {"step": "name"}
-    await message.answer("Напиши своё имя:")
-
-
-@dp.message(lambda message: str(message.from_user.id) in drafts)
-async def form_steps(message: Message):
-    uid = str(message.from_user.id)
-    text = message.text.strip()
-
-    if text.startswith("/"):
-        return
-
-    step = drafts[uid]["step"]
-
-    if step == "name":
-        drafts[uid]["name"] = text
-        drafts[uid]["step"] = "age"
-        await message.answer("Записано ✅\nНапиши возраст только цифрами:")
-
-    elif step == "age":
-        if not text.isdigit():
-            await message.answer("Возраст только цифрами, например: 17")
-            return
-        drafts[uid]["age"] = text
-        drafts[uid]["step"] = "gender"
-        await message.answer("Записано ✅\nНапиши пол:")
-
-    elif step == "gender":
-        drafts[uid]["gender"] = text
-        drafts[uid]["step"] = "request"
-        await message.answer("Записано ✅\nНапиши запрос:")
-
-    elif step == "request":
-        drafts[uid]["request"] = text
-        drafts[uid]["step"] = "note"
-        await message.answer("Записано ✅\nНапиши примечание:")
-
-    elif step == "note":
-        drafts[uid]["note"] = text
-
-        anketa = (
-            f"Имя: {drafts[uid]['name']}\n"
-            f"Возраст: {drafts[uid]['age']}\n"
-            f"Пол: {drafts[uid]['gender']}\n"
-            f"Запрос: {drafts[uid]['request']}\n"
-            f"Примечание: {drafts[uid]['note']}"
-        )
-
-        users[uid] = anketa
-        save_data(data)
-        del drafts[uid]
-
-        await message.answer("✅ Анкета сохранена")
 
 @dp.callback_query()
 async def handle(callback: CallbackQuery):
