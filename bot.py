@@ -172,7 +172,7 @@ async def broadcast(message: Message):
         except:
             pass
 
-await message.answer(f"✅ Отправлено: {sent}")
+    await message.answer(f"✅ Отправлено: {sent}")
 @dp.message(lambda message: message.text == "📝 Заполнить анкету")
 async def start_form(message: Message):
     uid = str(message.from_user.id)
