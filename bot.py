@@ -35,7 +35,7 @@ banned = data["banned"]
 data.setdefault("seen", {})
 seen = data["seen"]
 banned = data.get("banned", [])
-
+drafts = {}
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 menu = ReplyKeyboardMarkup(
