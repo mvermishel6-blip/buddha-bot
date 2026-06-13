@@ -40,6 +40,7 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher()
 menu = ReplyKeyboardMarkup(
     keyboard=[
+        [KeyboardButton(text="📝 Заполнить анкету")],
         [KeyboardButton(text="🔎 Смотреть анкеты")],
         [KeyboardButton(text="👤 Моя анкета")],
         [KeyboardButton(text="🗑 Удалить анкету")],
@@ -53,19 +54,16 @@ menu = ReplyKeyboardMarkup(
 async def start(message: Message):
     uid = str(message.from_user.id)
 
-    if uid not in users:
-        users[uid] = "start"
-        save_data(data)
 
    
 
+
     await message.answer(
-        await message.answer(
         "Выберите действие внизу👇\n\n"
         "🪷 P.S. Пример анкеты: https://t.me/buddhism_cooperation/25?comment=14",
-        reply_markup=menu
+        reply_markup=menu,
     )
-)
+
     
 @dp.message(Command("search"))
 async def search(message: Message):
@@ -174,36 +172,64 @@ async def broadcast(message: Message):
         except:
             pass
 
-    await message.answer(f"✅ Отправлено: {sent}")
-@dp.message()
-async def save_anketa(message: Message):
-    if message.chat.id == ADMIN_GROUP_ID:
+await message.answer(f"✅ Отправлено: {sent}")
+@dp.message(lambda message: message.text == "📝 Заполнить анкету")
+async def start_form(message: Message):
+    uid = str(message.from_user.id)
+    drafts[uid] = {"step": "name"}
+    await message.answer("Напиши своё имя:")
+
+
+@dp.message(lambda message: str(message.from_user.id) in drafts)
+async def form_steps(message: Message):
+    uid = str(message.from_user.id)
+    text = message.text.strip()
+
+    if text.startswith("/"):
         return
 
-    if str(message.from_user.id) in banned:
-        await message.answer("⛔ Вы заблокированы")
-        return
+    step = drafts[uid]["step"]
 
-    if message.text.startswith("/"):
-        return
+    if step == "name":
+        drafts[uid]["name"] = text
+        drafts[uid]["step"] = "age"
+        await message.answer("Записано ✅\nНапиши возраст только цифрами:")
 
-    required_fields = ["Имя:", "Возраст:", "Пол:", "Запрос:", "Примечание:"]
+    elif step == "age":
+        if not text.isdigit():
+            await message.answer("Возраст только цифрами, например: 17")
+            return
+        drafts[uid]["age"] = text
+        drafts[uid]["step"] = "gender"
+        await message.answer("Записано ✅\nНапиши пол:")
 
-    if not all(field in message.text for field in required_fields):
-        await message.answer(
-            "⚠️ Анкета должна быть строго по шаблону:\n\n"
-            "Имя:\n"
-            "Возраст:\n"
-            "Пол:\n"
-            "Запрос:\n"
-            "Примечание:"
+    elif step == "gender":
+        drafts[uid]["gender"] = text
+        drafts[uid]["step"] = "request"
+        await message.answer("Записано ✅\nНапиши запрос:")
+
+    elif step == "request":
+        drafts[uid]["request"] = text
+        drafts[uid]["step"] = "note"
+        await message.answer("Записано ✅\nНапиши примечание:")
+
+    elif step == "note":
+        drafts[uid]["note"] = text
+
+        anketa = (
+            f"Имя: {drafts[uid]['name']}\n"
+            f"Возраст: {drafts[uid]['age']}\n"
+            f"Пол: {drafts[uid]['gender']}\n"
+            f"Запрос: {drafts[uid]['request']}\n"
+            f"Примечание: {drafts[uid]['note']}"
         )
-        return
 
-    users[str(message.from_user.id)] = message.text
-    save_data(data)
+        users[uid] = anketa
+        save_data(data)
+        del drafts[uid]
 
-    await message.answer("✅ Анкета сохранена")
+        await message.answer("✅ Анкета сохранена")
+
 @dp.callback_query()
 async def handle(callback: CallbackQuery):
     uid = str(callback.from_user.id)
