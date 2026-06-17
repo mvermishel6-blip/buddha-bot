@@ -60,7 +60,7 @@ async def start(message: Message):
 
     await message.answer(
         "Выберите действие внизу👇\n\n"
-        "🪷 P.S. Пример анкеты: https://t.me/buddhism_cooperation/25?comment=14",
+        "🪷 P.S. Пример анкеты: https://t.me/c/3788983036/14",
         reply_markup=menu,
     )
 @dp.message(lambda message: message.text == "📝 Заполнить анкету")
