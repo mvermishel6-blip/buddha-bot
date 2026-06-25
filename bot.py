@@ -9,7 +9,7 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 
 
 
-TOKEN = "8802174236:AAHCC-ddw5qZAafv7pPGRd3YIh-8w9HWms0"
+TOKEN = "8802174236:AAHznUEQ7LPFHJRX6v-p5y16KQ8YWy4MaY4"
 
 FILE = "data.json"
 
